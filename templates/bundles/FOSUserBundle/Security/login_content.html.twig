@@ -1,0 +1,61 @@
+{% trans_default_domain 'FOSUserBundle' %}
+
+<div class="sm:mx-auto sm:w-full sm:max-w-md">
+    <h3 class="mt-6 text-center text-2xl leading-9 font-extrabold text-gray-900">
+        Connectez-vous à votre compte
+    </h3>
+
+    {% if error %}
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 mt-3 rounded relative" role="alert">
+            <strong class="font-bold">{{ error.messageKey|trans(error.messageData, 'security') }}</strong>
+        </div>
+    {% endif %}
+
+</div>
+<div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+    <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+        <form action="{{ path("fos_user_security_check") }}" method="POST">
+            {% if csrf_token %}
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
+            {% endif %}
+            <div>
+                <label for="username" class="block text-sm font-medium leading-5 text-gray-700">
+                    {{ 'security.login.username'|trans }}
+                </label>
+                <div class="mt-1 rounded-md shadow-sm">
+                    <input id="username" name="_username" value="{{ last_username }}" required="required" autocomplete="username"
+                           class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"/>
+                </div>
+            </div>
+
+            <div class="mt-6">
+                <label for="password" class="block text-sm font-medium leading-5 text-gray-700">
+                    {{ 'security.login.password'|trans }}
+                </label>
+                <div class="mt-1 rounded-md shadow-sm">
+                    <input id="password" name="_password" required="required" type="password" autocomplete="current-password"
+                           class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"/>
+                </div>
+            </div>
+
+            <div class="mt-6 flex items-center justify-between">
+                <div class="flex items-center">
+                    <input id="remember_me" type="checkbox" name="_remember_me" value="on"
+                           class="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"/>
+                    <label for="remember_me" class="ml-2 block text-sm leading-5 text-gray-900">
+                        {{ 'security.login.remember_me'|trans }}
+                    </label>
+                </div>
+            </div>
+
+            <div class="mt-6">
+          <span class="block w-full rounded-md shadow-sm">
+            <button type="submit" id="_submit" name="_submit"
+                    class="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-500 hover:bg-green-400 focus:outline-none focus:border-green-700 focus:shadow-outline-green active:bg-green-700 transition duration-150 ease-in-out">
+              {{ 'security.login.submit'|trans }}
+            </button>
+          </span>
+            </div>
+        </form>
+    </div>
+</div>

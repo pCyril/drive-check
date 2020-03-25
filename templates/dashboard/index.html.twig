@@ -1,0 +1,110 @@
+{% set mainTitle = 'Administration' %}
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}Admin{% endblock %}
+
+{% block body %}
+
+    {% set current_path = app.request.get('_route') %}
+
+    <div class="lg:flex lg:items-center lg:justify-between mb-8">
+        <div class="flex-1 min-w-0">
+            <h4 class="text-xl font-bold leading-7 text-gray-900 sm:text-xl sm:leading-9 sm:truncate">
+                Magasin à surveiller
+            </h4>
+        </div>
+        <div class="mt-5 flex lg:mt-0 lg:ml-4">
+    <span class="shadow-sm rounded-md">
+      <button type="button"
+              data-modal data-modal-title="Ajouter un magasin à surveiller" data-url="{{ path('dashboard_add_action') }}"
+              class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm leading-5 font-medium rounded-md text-gray-700 bg-white hover:text-gray-500 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 active:text-gray-800 active:bg-gray-50 transition duration-150 ease-in-out">
+        <i class="fal fa-plus-circle mr-2"></i>
+        Ajouter un magasin à surveiller
+      </button>
+    </span>
+        </div>
+    </div>
+
+    {% set direction = ('asc' == pagination.direction ? 'desc' : 'asc') %}
+
+    {% set sortClass = ('asc' == pagination.direction ? 'fal fa-sort-amount-up-alt' : 'fal fa-sort-amount-down-alt') %}
+
+    <div class="-my-2 py-2 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+        <div class="align-middle inline-block min-w-full shadow sm:rounded-lg border-b border-gray-200">
+            <table class="min-w-full">
+                <thead>
+                <tr>
+                    <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                        {{ knp_pagination_sortable(pagination, 'Magasin', 'a.store', {}, {'direction': direction}) }}
+                        {% if pagination.isSorted('a.store') %} <i class="{{ sortClass }}"></i>{% endif %}
+                    </th>
+                    <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                        Id Magasin
+                    </th>
+                    <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                        {{ knp_pagination_sortable(pagination, 'Dernier check', 'a.lastCheck', {}, {'direction': direction}) }}
+                        {% if pagination.isSorted('a.lastCheck') %} <i class="{{ sortClass }}"></i>{% endif %}
+                    </th>
+                    <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                        {{ knp_pagination_sortable(pagination, 'Créé le', 'a.createdAt', {}, {'direction': direction}) }}
+                        {% if pagination.isSorted('a.createdAt') %} <i class="{{ sortClass }}"></i>{% endif %}
+                    </th>
+                    <th class="text-right px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                        Actions
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for action in pagination %}
+                    <tr class="{% if loop.index % 2 %}bg-white{% else %}bg-gray-200{% endif %}">
+                        <td class="px-6 py-3 whitespace-no-wrap text-sm leading-5 font-medium text-gray-900">
+                            {{ action.store }}
+                        </td>
+                        <td class="px-6 py-3 whitespace-no-wrap text-sm leading-5 text-gray-500">
+                            {{ action.storeId }}
+                        </td>
+                        <td class="px-6 py-3 whitespace-no-wrap text-sm leading-5 text-gray-500">
+                            {% if action.lastCheck %}
+                            {{ action.lastCheck|date("d/m/Y H:i:s") }}
+                            {% else %}
+                                Pas encore
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-3 whitespace-no-wrap text-sm leading-5 text-gray-500">
+                            {{ action.createdAt|date("d/m/Y H:i:s") }}
+                        </td>
+                        <td class="px-6 py-3 whitespace-no-wrap text-right text-sm leading-5 font-medium">
+                            <div @click.away="open_action_{{ action.id }} = false" class="ml-3 relative" x-data="{open_action_{{ action.id }}: false}">
+                                <div>
+                                    <a @click="open_action_{{ action.id }} = !open_action_{{ action.id }}" class="cursor-pointer inline-flex items-center px-6 py-3 border border-gray-300 text-sm leading-5 font-medium rounded-md text-gray-700 bg-white hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:text-gray-800 active:bg-gray-50 transition ease-in-out duration-150">
+                                        Actions
+                                    </a>
+                                </div>
+                                <div x-show="open_action_{{ action.id }}" class="origin-top-left text-left absolute right-0 mt-2 w-48 rounded-md shadow-lg z-40">
+                                    <div class="py-1 rounded-md bg-white shadow-xs">
+                                        <a href="javascript:void(0);" data-modal data-modal-title="Editer ce magasin"
+                                           data-url="{{ path('dashboard_add_action', { 'action': action.id}) }}"
+                                           class="block px-6 py-3 text-sm bg-white text-gray-700 hover:bg-gray-100">Editer</a>
+                                    </div>
+                                    <div class="py-1 rounded-md bg-white shadow-xs">
+                                        <a href="{{ path('dashboard_delete_action', { 'action': action.id}) }}" data-confirm="Etes-vous sur de vouloir supprimer ce magasin ?"
+                                           class="block px-6 py-3 text-sm bg-white text-red-600 hover:text-red-700 hover:bg-gray-100">Supprimer</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {# display navigation #}
+    <div class="navigation mt-6">
+        {{ knp_pagination_render(pagination) }}
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/confirm.js') }}" defer></script>
+{% endblock %}

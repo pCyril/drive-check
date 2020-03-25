@@ -1,0 +1,14 @@
+{% extends "mail/layout/base.html.twig" %}
+
+{% block content %}
+    <mj-section mj-class="content">
+        <mj-column>
+            <mj-text mj-class="bold">Bonjour,</mj-text>
+
+            <mj-text>
+                Un nouveau créneau est disponible pour votre magasin {{ store }}.
+            </mj-text>
+
+        </mj-column>
+    </mj-section>
+{% endblock %}

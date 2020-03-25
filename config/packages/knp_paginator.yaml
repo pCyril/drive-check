@@ -1,0 +1,4 @@
+knp_paginator:
+    page_range: 10
+    template:
+        pagination: 'Pagination/sliding.html.twig'     # sliding pagination controls template

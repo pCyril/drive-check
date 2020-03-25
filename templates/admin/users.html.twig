@@ -1,0 +1,102 @@
+{% set mainTitle = 'Administration' %}
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}Admin{% endblock %}
+
+{% block body %}
+
+    {% set current_path = app.request.get('_route') %}
+
+        <div class="lg:flex lg:items-center lg:justify-between mb-8">
+            <div class="flex-1 min-w-0">
+                <h4 class="text-xl font-bold leading-7 text-gray-900 sm:text-xl sm:leading-9 sm:truncate">
+                    {{ page_title }}
+                </h4>
+            </div>
+            <div class="mt-5 flex lg:mt-0 lg:ml-4">
+    <span class="shadow-sm rounded-md">
+      <button type="button"
+              data-modal data-modal-title="Ajouter un utilisateur" data-url="{{ path('admin_add_user') }}"
+              class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm leading-5 font-medium rounded-md text-gray-700 bg-white hover:text-gray-500 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 active:text-gray-800 active:bg-gray-50 transition duration-150 ease-in-out">
+        <i class="fal fa-plus-circle mr-2"></i>
+        Ajouter un admin ou un utilisateur
+      </button>
+    </span>
+            </div>
+        </div>
+
+    {% set direction = ('asc' == pagination.direction ? 'desc' : 'asc') %}
+
+    {% set sortClass = ('asc' == pagination.direction ? 'fal fa-sort-amount-up-alt' : 'fal fa-sort-amount-down-alt') %}
+
+        <div class="-my-2 py-2 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+            <div class="align-middle inline-block min-w-full shadow sm:rounded-lg border-b border-gray-200">
+                <table class="min-w-full">
+                    <thead>
+                    <tr>
+                        <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                            {{ knp_pagination_sortable(pagination, 'Login', 'u.username', {}, {'direction': direction}) }}
+                            {% if pagination.isSorted('u.username') %} <i class="{{ sortClass }}"></i>{% endif %}
+                        </th>
+                        <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                            {{ knp_pagination_sortable(pagination, 'Email', 'u.email', {}, {'direction': direction}) }}
+                            {% if pagination.isSorted('u.email') %} <i class="{{ sortClass }}"></i>{% endif %}
+                        </th>
+                        <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                            {{ knp_pagination_sortable(pagination, 'Date de création', 'u.createdAt', {}, {'direction': direction}) }}
+                            {% if pagination.isSorted('u.createdAt') %} <i class="{{ sortClass }}"></i>{% endif %}
+                        </th>
+                        <th class="text-right px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                            Actions
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for user in pagination %}
+                    <tr class="{% if loop.index % 2 %}bg-white{% else %}bg-gray-200{% endif %}">
+                        <td class="px-2 py-1 whitespace-no-wrap text-sm leading-5 font-medium text-gray-900">
+                            {{ user.username }}
+                        </td>
+                        <td class="px-2 py-1 whitespace-no-wrap text-sm leading-5 text-gray-500">
+                            {{ user.email }}
+                        </td>
+                        <td class="px-2 py-1 whitespace-no-wrap text-sm leading-5 text-gray-500">
+                            {{ user.createdAt|date("d/m/Y") }}
+                        </td>
+                        <td class="px-2 py-1 whitespace-no-wrap text-right text-sm leading-5 font-medium">
+                            <div @click.away="open_action_{{ user.id }} = false" class="ml-3 relative" x-data="{open_action_{{ user.id }}: false}">
+                                <div>
+                                    <a @click="open_action_{{ user.id }} = !open_action_{{ user.id }}" class="cursor-pointer inline-flex items-center px-2 py-1 border border-gray-300 text-sm leading-5 font-medium rounded-md text-gray-700 bg-white hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:text-gray-800 active:bg-gray-50 transition ease-in-out duration-150">
+                                        Actions
+                                    </a>
+                                </div>
+                                <div x-show="open_action_{{ user.id }}" class="origin-top-left text-left absolute right-0 mt-2 w-48 rounded-md shadow-lg z-40">
+                                    <div class="py-1 rounded-md bg-white shadow-xs">
+                                        <a href="javascript:void(0);" data-modal data-modal-title="Editer cet utilisateur"
+                                           data-url="{{ path('admin_add_user', { 'user': user.id}) }}"
+                                           class="block px-2 py-1 text-sm bg-white text-gray-700 hover:bg-gray-100">Editer</a>
+                                    </div>
+                                    {% if user.id != app.user.id %}
+                                    <div class="py-1 rounded-md bg-white shadow-xs">
+                                        <a href="{{ path('admin_delete_user', { 'user': user.id}) }}" data-confirm="Etes-vous sur de vouloir supprimer cet utilisateur ?"
+                                           class="block px-2 py-1 text-sm bg-white text-red-600 hover:text-red-700 hover:bg-gray-100">Supprimer</a>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {# display navigation #}
+    <div class="navigation mt-6">
+        {{ knp_pagination_render(pagination) }}
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/confirm.js') }}" defer></script>
+{% endblock %}

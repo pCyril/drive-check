@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tailwindcss/ui@latest/dist/tailwind-ui.min.css">
+        <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.12.1/css/all.css" integrity="sha384-TxKWSXbsweFt0o2WqfkfJRRNVaPdzXJ/YLqgStggBVRREXkwU7OKz+xXtqOU4u8+" crossorigin="anonymous">
+        <link rel="stylesheet" href="{{ asset('css/main.css') }}">
+        <title>{% block title %}App NeoSEO{% endblock %}</title>
+        {% block stylesheets %}{% endblock %}
+    </head>
+    <body>
+    <div>
+
+        {% set current_path = app.request.get('_route') %}
+        {% set activeClassLink = 'px-3 py-2 rounded-md text-sm font-medium text-white bg-gray-900 focus:outline-none focus:text-white focus:bg-gray-700' %}
+        {% set inactiveClassLink = 'px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700' %}
+
+
+        {% set activeClassLinkMobile = 'block px-3 py-2 rounded-md text-base font-medium text-white bg-gray-900 focus:outline-none focus:text-white focus:bg-gray-700' %}
+        {% set inactiveClassLinkMobile = 'block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700' %}
+
+        <nav x-data="{ open: false }" @keydown.window.escape="open = false" class="bg-gray-800">
+            <div class="px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-16">
+                    <div class="flex items-center">
+                        <div class="hidden md:block">
+                            <div class="flex items-baseline">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hidden md:block">
+                        <div class="ml-4 flex items-center md:ml-6">
+                            <a href="{{ path('dashboard_home') }}" class="{% if current_path == 'dashboard_home' %}{{ activeClassLink }}{% else %}{{ inactiveClassLink }}{% endif %}">Home</a>
+                            {% if app.user.hasRole('ROLE_ADMIN') %}
+                                <div @click.away="openAdminDrop = false" class="relative" x-data="{ openAdminDrop: false }">
+                                    <a href="javascript:void(0);" @click="openAdminDrop = !openAdminDrop" class="{% if 'admin_' in current_path %}{{ activeClassLink }}{% else %}{{ inactiveClassLink }}{% endif %} ml-4">Admin</a>
+
+                                    <div x-show="openAdminDrop" x-transition:enter="transition ease-out duration-100" x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="transform opacity-100 scale-100" x-transition:leave-end="transform opacity-0 scale-95" class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg">
+                                        <div class="py-1 rounded-md bg-white shadow-xs">
+                                            <a href="{{ path('admin_users', { 'role': 'ROLE_ADMIN' }) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Admin</a>
+                                            <a href="{{ path('admin_users') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Utilisateurs</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            <div @click.away="open = false" class="ml-3 relative" x-data="{ open: false }">
+                                <div>
+                                    <button @click="open = !open" class="max-w-xs flex items-center text-sm rounded-full text-white focus:outline-none focus:shadow-solid">
+                                        <span class="inline-block h-8 w-8 rounded-full overflow-hidden bg-gray-100">
+                                          <svg class="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+                                          </svg>
+                                        </span>
+                                    </button>
+                                </div>
+                                <div x-show="open" x-transition:enter="transition ease-out duration-100" x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="transform opacity-100 scale-100" x-transition:leave-end="transform opacity-0 scale-95" class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg">
+                                    <div class="py-1 rounded-md bg-white shadow-xs">
+                                        <a href="{{ path('fos_user_security_logout') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Déconnexion</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="-mr-2 flex md:hidden">
+                        <button @click="open = !open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:bg-gray-700 focus:text-white">
+                            <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                                <path :class="{'hidden': open, 'inline-flex': !open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                                <path :class="{'hidden': !open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div :class="{'block': open, 'hidden': !open}" class="hidden md:hidden">
+                <div class="px-2 pt-2 pb-3 sm:px-3">
+                        <a href="{{ path('dashboard_home') }}" class="{% if current_path == 'dashboard_home' %}{{ activeClassLinkMobile }}{% else %}{{ inactiveClassLinkMobile }}{% endif %}">Home</a>
+                </div>
+
+                <div class="mt-4 mx-3">
+
+                    {% if app.user.hasRole('ROLE_ADMIN') %}
+                        <h3 class="px-3 text-xs leading-4 font-semibold text-gray-500 uppercase tracking-wider">
+                            Admin
+                        </h3>
+                        <div class="mt-1">
+                            <a href="{{ path('admin_users', { 'role': 'ROLE_ADMIN' }) }}" class="group flex items-center px-3 py-2 text-sm leading-5 font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50 focus:outline-none focus:bg-gray-100 transition ease-in-out duration-150">
+                                <span class="truncate">
+                                  Administrateurs
+                                </span>
+                            </a>
+                            <a href="{{ path('admin_users') }}" class="mt-1 group flex items-center px-3 py-2 text-sm leading-5 font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50 focus:outline-none focus:bg-gray-100 transition ease-in-out duration-150">
+                                <span class="truncate">
+                                  Utilisateurs
+                                </span>
+                            </a>
+                        </div>
+                    {% endif %}
+
+                <div class="pt-4 pb-3 border-t border-gray-700">
+                    <div class="flex items-center px-5">
+                        <div class="flex-shrink-0">
+                            <span class="inline-block h-10 w-10 rounded-full overflow-hidden bg-gray-100">
+                              <svg class="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+                              </svg>
+                            </span>
+                        </div>
+                        <div class="ml-3">
+                            <div class="text-base font-medium leading-none text-white">{{ app.user.username }}</div>
+                            <div class="mt-1 text-sm font-medium leading-none text-gray-400">{{ app.user.email }}</div>
+                        </div>
+                    </div>
+                    <div class="mt-3 px-2">
+                        <a href="{{ path('fos_user_security_logout') }}" class="mt-1 block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700">Déconnexion</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <header class="bg-white shadow">
+            <div class="py-6 px-4 sm:px-6 lg:px-8">
+                <h2 class="text-3xl font-bold leading-tight text-gray-900">
+                    {{ mainTitle }}
+                </h2>
+            </div>
+        </header>
+        <main>
+            <div class="py-6 sm:px-6 lg:px-8">
+                <div class="flex flex-col">
+                    {% block body %}{% endblock %}
+                </div>
+            </div>
+        </main>
+    </div>
+
+
+    <div class="modal-wrapper hidden fixed px-4 pb-4 inset-0 flex items-center justify-center z-50">
+
+        <div class="fixed inset-0 transition-opacity">
+            <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+        </div>
+
+        <div class="modal flex flex-col rounded-md">
+
+            <div class="modal-header">
+                <div class="p-4 modal-title">
+                    &nbsp;
+                </div>
+
+                <div class="sm:block absolute top-0 right-0 pt-4 pr-4">
+                    <button type="button"
+                            class="close-modal text-gray-400 hover:text-gray-500 focus:outline-none focus:text-gray-500 transition ease-in-out duration-150">
+                        <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="modal-body flex-1">
+            </div>
+            <div class="modal-footer m-3 sm:flex sm:flex-row-reverse">
+                <span class="flex w-full rounded-md shadow-sm sm:ml-3 sm:w-auto">
+                    <button type="button" form="set_target_url"
+                            class="submit inline-flex justify-center w-full px-4 py-2 rounded-md border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline-indigo focus:border-indigo-700 active:bg-indigo-700 transition duration-150 ease-in-out">
+                        Valider
+                    </button>
+                </span>
+                <span class="mt-3 flex w-full rounded-md shadow-sm sm:mt-0 sm:w-auto">
+                    <button type="button"
+                            class="close-modal inline-flex justify-center w-full rounded-md border border-gray-300 px-4 py-2 bg-white text-base leading-6 font-medium text-gray-700 shadow-sm hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline transition ease-in-out duration-150 sm:text-sm sm:leading-5">
+                      Annuler
+                    </button>
+                </span>
+            </div>
+        </div>
+    </div>
+
+
+    {% block javascripts %}
+        <script src="{{ asset('js/jquery.min.js') }}" defer></script>
+        <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.0.1/dist/alpine.js" defer></script>
+        <script src="{{ asset('js/modal.js') }}" defer></script>
+    {% endblock %}
+
+    </body>
+</html>

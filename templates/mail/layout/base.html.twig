@@ -1,0 +1,47 @@
+<mjml owa="desktop" lang="fr">
+    <mj-head>
+
+        <mj-font name="Source Sans Pro" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" />
+        <mj-font name="Montserrat" href="https://fonts.googleapis.com/css?family=Montserrat:700" />
+
+        <mj-attributes>
+            {% block attributes %}{% endblock %}
+
+            <mj-class name="header" background-color="#000" padding="20px 0px" border-radius="10px 10px 0px 0px" />
+            <mj-class name="footer" padding="5px 0px" border-radius="0px 0px 10px 10px" />
+            <mj-class name="spacer" background-color="#efedef" padding="0px" />
+            <mj-class name="legal" background-color="transparent" />
+            <mj-class name="content" padding-bottom="10px" />
+            <mj-class name="title" align="center" font-size="24px" color="#f6513b" font-weight="bold" />
+            <mj-class name="bold" font-weight="bold" />
+            <mj-class name="btn-outline" background-color="transparent" border="2px solid #ccc4ca" color="#bfb5bc" />
+            <mj-class name="btn-hl" background-color="#f6513b" color="#fff" />
+            <mj-wrapper padding="40px 15px" />
+            <mj-section background-color="#ffffff" padding="30px" />
+            <mj-text padding="0px 0px 20px 0px" line-height="1.42857143" />
+            <mj-button padding="0px 0px 20px 0px" font-family="Montserrat, sans-serif" font-size="12px" font-weight="bold" inner-padding="12px 30px" border-radius="35px" text-transform="uppercase" />
+            <mj-all padding="0px" font-family="Source Sans Pro, sans-serif" font-size="14px" color="#1f2041" />
+        </mj-attributes>
+
+        <mj-style inline="inline">
+            .legal { opacity: 0.4; }
+            .text-link { color: #1f2041; }
+            .hl-link { color: #f6513b; }
+        </mj-style>
+
+        {% block styles %}{% endblock %}
+    </mj-head>
+
+    <mj-body background-color="#efedef">
+        <mj-wrapper>
+            <mj-section mj-class="header" background-color="#000">
+            </mj-section>
+
+            {% block content %}{% endblock %}
+
+            <mj-section mj-class="footer"></mj-section>
+
+            {% block legal %}{% endblock %}
+        </mj-wrapper>
+    </mj-body>
+</mjml>

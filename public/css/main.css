@@ -1,0 +1,35 @@
+.modal {
+    position: absolute;
+    background: white;
+}
+
+.modal.full {
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+}
+
+.modal:not(.full) {
+    width: 48rem;
+    max-height: calc(100% - 40px);
+}
+
+.modal .modal-body {
+    overflow-x: auto;
+}
+
+
+.tooltip {
+    z-index: 10;
+    visibility: hidden;
+    min-width: 350px;
+}
+
+.tooltip .row:last-child {
+    border-bottom: 0px;
+}
+
+.tooltip-wrapper.force .tooltip, .tooltip-wrapper:hover .tooltip {
+    visibility: visible;
+}
