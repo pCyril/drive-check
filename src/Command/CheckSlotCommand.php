@@ -56,6 +56,10 @@ class CheckSlotCommand extends Command
                     $this->checkSuperUDrive($action);
                     break;
             }
+
+            $action->setLastCheck(new \DateTime());
+            $this->em->persist($action);
+            $this->em->flush();
         }
     }
 
