@@ -52,6 +52,12 @@ class Action
      */
     protected $storeId;
 
+    /**
+     * @var boolean
+     * @ORM\Column(type="boolean", nullable=false, options={"default": false})
+     */
+    protected $slotOpen;
+
     public function __construct()
     {
         $this->createdAt = new \DateTime();
@@ -164,4 +170,25 @@ class Action
 
         return $this;
     }
+
+    /**
+     * @return bool
+     */
+    public function isSlotOpen()
+    {
+        return $this->slotOpen;
+    }
+
+    /**
+     * @param bool $slotOpen
+     *
+     * @return $this
+     */
+    public function setSlotOpen($slotOpen)
+    {
+        $this->slotOpen = $slotOpen;
+
+        return $this;
+    }
+
 }

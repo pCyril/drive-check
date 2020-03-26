@@ -22,7 +22,7 @@ class ActionType extends AbstractType
                 'choices' => [
                     'Auchan' => 'auchan',
                     'Carrefour' => 'carrefour',
-                    'Super U' => 'super_u',
+                    //'Super U' => 'super_u',
                 ],
             ])
             ->add('storeId', IntegerType::class, [

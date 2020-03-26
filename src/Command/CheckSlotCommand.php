@@ -47,13 +47,13 @@ class CheckSlotCommand extends Command
         foreach ($progressBar->iterate($actions) as $key => $action) {
             switch ($action->getStore()) {
                 case 'auchan':
-                    $this->checkAuchanDrive($action);
+                    $action = $this->checkAuchanDrive($action);
                     break;
                 case 'carrefour':
-                    $this->checkCarrefourDrive($action);
+                    $action = $this->checkCarrefourDrive($action);
                     break;
                 case 'super_u':
-                    $this->checkSuperUDrive($action);
+                    $action = $this->checkSuperUDrive($action);
                     break;
             }
 
@@ -75,9 +75,17 @@ class CheckSlotCommand extends Command
 
         $result = json_decode($response->getBody()->__toString(), true);
 
-        if ($result['status'] === 'ok') {
+        if ($result['status'] === 'ok' && !$action->isSlotOpen()) {
+            $action->setSlotOpen(true);
             $this->sendEmail($action);
+        } else {
+            if ($action->isSlotOpen()) {
+                $this->sendEmail($action, true);
+            }
+            $action->setSlotOpen(false);
         }
+
+        return $action;
     }
 
     public function checkCarrefourDrive(Action $action)
@@ -92,8 +100,14 @@ class CheckSlotCommand extends Command
 
         $result = json_decode($response->getBody()->__toString(), true);
 
-        if (!empty($result)) {
+        if (!empty($result) && !$action->isSlotOpen()) {
+            $action->setSlotOpen(true);
             $this->sendEmail($action);
+        } else {
+            if ($action->isSlotOpen()) {
+                $this->sendEmail($action, true);
+            }
+            $action->setSlotOpen(false);
         }
     }
 
@@ -120,25 +134,39 @@ class CheckSlotCommand extends Command
             }
         }
 
-        if ($availableSlot) {
+        if ($availableSlot && !$action->isSlotOpen()) {
+            $action->setSlotOpen(true);
             $this->sendEmail($action);
+        } else {
+            if ($action->isSlotOpen()) {
+                $this->sendEmail($action, true);
+            }
+            $action->setSlotOpen(false);
         }
     }
 
     /**
      * @param Action $action
      */
-    public function sendEmail(Action $action)
+    public function sendEmail(Action $action, $close = false)
     {
-        $message = (new \Swift_Message('Votre drive a un créneau disponible'))
+        $subject = 'Votre drive a un créneau disponible';
+        $template = 'mail/new_slot.html.twig';
+
+        if ($close) {
+            $subject = 'Votre drive n\'a plus de créneaux disponibles';
+            $template = 'mail/close_slot.html.twig';
+        }
+
+        $message = (new \Swift_Message($subject))
             ->setFrom('perraud.cyril@gmail.com')
             ->setTo($action->getUser()->getEmail())
             ->setBody(
                 $this->renderHTML($this->templating->render(
-                // templates/emails/registration.html.twig
-                    'mail/new_slot.html.twig',
+                    $template,
                     [
                         'store' => $action->getStore(),
+                        'id' => $action->getStoreId(),
                     ]
                 )),
                 'text/html'

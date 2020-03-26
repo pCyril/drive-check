@@ -98,7 +98,7 @@ class DashboardController extends AbstractController
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function deleteClient(EntityManagerInterface $em, Action $action)
+    public function deleteAction(EntityManagerInterface $em, Action $action)
     {
         if ($this->getUser()->getId() !== $action->getUser()->getId()) {
             return $this->redirectToRoute('dashboard_home');
