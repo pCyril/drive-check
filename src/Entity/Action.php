@@ -61,6 +61,7 @@ class Action
     public function __construct()
     {
         $this->createdAt = new \DateTime();
+        $this->slotOpen = false;
     }
 
     /**
