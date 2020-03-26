@@ -3,28 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\Action;
-use App\Entity\Client;
-use App\Entity\PBN;
-use App\Entity\Thematic;
-use App\Entity\User;
 use App\Form\Type\ActionType;
-use App\Form\Type\ClientType;
-use App\Form\Type\PBNType;
-use App\Form\Type\ThematicType;
-use App\Repository\ClientRepository;
-use App\Repository\SiteRepository;
-use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use FOS\UserBundle\Model\UserManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
  * @Route("/dashboard", name="dashboard_")
