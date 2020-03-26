@@ -94,24 +94,4 @@ class DashboardController extends AbstractController
 
         return $this->redirectToRoute('dashboard_home');
     }
-
-    /**
-     * @Route("/break/action/{action}", name="break_action")
-     *
-     * @param EntityManagerInterface $em
-     * @param Action $action
-     *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     */
-    public function breakAction(EntityManagerInterface $em, Action $action)
-    {
-        if ($this->getUser()->getId() !== $action->getUser()->getId()) {
-            return $this->redirectToRoute('dashboard_home');
-        }
-        $action->setOnBreak(!$action->isOnBreak());
-        $em->persist($action);
-        $em->flush();
-
-        return $this->redirectToRoute('dashboard_home');
-    }
 }
