@@ -58,6 +58,12 @@ class Action
      */
     protected $slotOpen;
 
+    /**
+     * @var boolean
+     * @ORM\Column(type="boolean", nullable=false, options={"default": false})
+     */
+    protected $onBreak;
+
     public function __construct()
     {
         $this->createdAt = new \DateTime();
@@ -188,6 +194,26 @@ class Action
     public function setSlotOpen($slotOpen)
     {
         $this->slotOpen = $slotOpen;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isOnBreak()
+    {
+        return $this->onBreak;
+    }
+
+    /**
+     * @param bool $onbreak
+     *
+     * @return $this
+     */
+    public function setOnBreak($onBreak)
+    {
+        $this->onBreak = $onBreak;
 
         return $this;
     }

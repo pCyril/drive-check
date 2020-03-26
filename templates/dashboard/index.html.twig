@@ -49,6 +49,9 @@
                         {{ knp_pagination_sortable(pagination, 'Créé le', 'a.createdAt', {}, {'direction': direction}) }}
                         {% if pagination.isSorted('a.createdAt') %} <i class="{{ sortClass }}"></i>{% endif %}
                     </th>
+                    <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                        En pause
+                    </th>
                     <th class="text-right px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                         Actions
                     </th>
@@ -73,6 +76,13 @@
                         <td class="px-6 py-3 whitespace-no-wrap text-sm leading-5 text-gray-900">
                             {{ action.createdAt|date("d/m/Y H:i:s") }}
                         </td>
+                        <td class="px-6 py-3 whitespace-no-wrap text-sm leading-5 text-gray-900">
+                            {% if action.onBreak %}
+                                <i class="fal fa-pause-circle fa-lg" title="en pause"></i>
+                            {% else %}
+                                <i class="fal fa-play-circle fa-lg" title="en cours"></i>
+                            {% endif %}
+                        </td>
                         <td class="px-6 py-3 whitespace-no-wrap text-right text-sm leading-5 font-medium">
                             <div @click.away="open_action_{{ action.id }} = false" class="ml-3 relative" x-data="{open_action_{{ action.id }}: false}">
                                 <div>
@@ -85,6 +95,10 @@
                                         <a href="javascript:void(0);" data-modal data-modal-title="Editer ce magasin"
                                            data-url="{{ path('dashboard_add_action', { 'action': action.id}) }}"
                                            class="block px-6 py-3 text-sm bg-white text-gray-700 hover:bg-gray-100">Editer</a>
+                                    </div>
+                                    <div class="py-1 rounded-md bg-white shadow-xs">
+                                        <a href="{{ path('dashboard_break_action', { 'action': action.id}) }}" data-confirm="Etes-vous sur de vouloir mettre en pause ce magasin ?"
+                                           class="block px-6 py-3 text-sm bg-white text-red-600 hover:text-red-700 hover:bg-gray-100">Pause</a>
                                     </div>
                                     <div class="py-1 rounded-md bg-white shadow-xs">
                                         <a href="{{ path('dashboard_delete_action', { 'action': action.id}) }}" data-confirm="Etes-vous sur de vouloir supprimer ce magasin ?"

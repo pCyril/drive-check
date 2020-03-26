@@ -36,7 +36,7 @@ class CheckSlotCommand extends Command
     {
         $actionRepository = $this->em->getRepository('App:Action');
 
-        $actions = $actionRepository->findAll();
+        $actions = $actionRepository->findBy(['onBreak' => false]);
 
         $progressBar = new ProgressBar($output);
 
