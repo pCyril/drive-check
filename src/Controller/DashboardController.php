@@ -3,28 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\Action;
-use App\Entity\Client;
-use App\Entity\PBN;
-use App\Entity\Thematic;
-use App\Entity\User;
 use App\Form\Type\ActionType;
-use App\Form\Type\ClientType;
-use App\Form\Type\PBNType;
-use App\Form\Type\ThematicType;
-use App\Repository\ClientRepository;
-use App\Repository\SiteRepository;
-use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use FOS\UserBundle\Model\UserManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
  * @Route("/dashboard", name="dashboard_")
@@ -79,6 +64,7 @@ class DashboardController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $action->setUser($this->getUser());
+            $action->setOnBreak(false);
             $em->persist($action);
             $em->flush();
 
@@ -105,6 +91,31 @@ class DashboardController extends AbstractController
         }
 
         $em->remove($action);
+        $em->flush();
+
+        return $this->redirectToRoute('dashboard_home');
+    }
+
+    /**
+     * @Route("/break/action/{action}", name="break_action")
+     *
+     * @param EntityManagerInterface $em
+     * @param Action $action
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function breakAction(EntityManagerInterface $em, Action $action)
+    {
+        if ($this->getUser()->getId() !== $action->getUser()->getId()) {
+            return $this->redirectToRoute('dashboard_home');
+        }
+
+        if($action->isOnBreak()){
+            $action->setOnBreak(false);
+        }else{
+            $action->setOnBreak(true);
+        }
+        $em->persist($action);
         $em->flush();
 
         return $this->redirectToRoute('dashboard_home');
