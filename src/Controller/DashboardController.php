@@ -64,7 +64,6 @@ class DashboardController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $action->setUser($this->getUser());
-            $action->setOnBreak(false);
             $em->persist($action);
             $em->flush();
 
@@ -109,12 +108,7 @@ class DashboardController extends AbstractController
         if ($this->getUser()->getId() !== $action->getUser()->getId()) {
             return $this->redirectToRoute('dashboard_home');
         }
-
-        if($action->isOnBreak()){
-            $action->setOnBreak(false);
-        }else{
-            $action->setOnBreak(true);
-        }
+        $action->setOnBreak(!$action->isOnBreak());
         $em->persist($action);
         $em->flush();
 
