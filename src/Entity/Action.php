@@ -68,6 +68,7 @@ class Action
     {
         $this->createdAt = new \DateTime();
         $this->slotOpen = false;
+        $this->onBreak = false;
     }
 
     /**
