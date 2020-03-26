@@ -109,6 +109,8 @@ class CheckSlotCommand extends Command
             }
             $action->setSlotOpen(false);
         }
+
+        return $action;
     }
 
     public function checkSuperUDrive(Action $action)
@@ -143,6 +145,8 @@ class CheckSlotCommand extends Command
             }
             $action->setSlotOpen(false);
         }
+
+        return $action;
     }
 
     /**
