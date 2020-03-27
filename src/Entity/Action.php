@@ -53,6 +53,12 @@ class Action
     protected $storeId;
 
     /**
+     * @var string
+     * @ORM\Column(type="string", nullable=true, length=255)
+     */
+    protected $storeName;
+
+    /**
      * @var boolean
      * @ORM\Column(type="boolean", nullable=false, options={"default": false})
      */
@@ -219,4 +225,28 @@ class Action
         return $this;
     }
 
+
+    /**
+     * Get the value of storeName
+     *
+     * @return  string
+     */ 
+    public function getStoreName()
+    {
+        return $this->storeName;
+    }
+
+    /**
+     * Set the value of storeName
+     *
+     * @param  string  $storeName
+     *
+     * @return  self
+     */ 
+    public function setStoreName(string $storeName)
+    {
+        $this->storeName = $storeName;
+
+        return $this;
+    }
 }
