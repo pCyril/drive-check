@@ -6,7 +6,8 @@
             <mj-text mj-class="bold">Bonjour,</mj-text>
 
             <mj-text>
-                Un nouveau créneau est disponible pour votre magasin {{ store }}({{ id }}).
+                Un nouveau créneau est disponible pour votre magasin {{ store }}({{ id }}{% if storeName %} {{ storeName }}{% endif %}
+                ).
             </mj-text>
 
         </mj-column>

@@ -171,6 +171,7 @@ class CheckSlotCommand extends Command
                     [
                         'store' => $action->getStore(),
                         'id' => $action->getStoreId(),
+                        'storeName' => $action->getStoreName(),
                     ]
                 )),
                 'text/html'

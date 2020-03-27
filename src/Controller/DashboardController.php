@@ -94,4 +94,32 @@ class DashboardController extends AbstractController
 
         return $this->redirectToRoute('dashboard_home');
     }
+
+    /**
+     * @Route("/stores", name="stores")
+     * @param Request $request
+     * @param PaginatorInterface $paginator
+     * @param EntityManagerInterface $em
+     * @return Response
+     */
+    public function stores(Request $request, PaginatorInterface $paginator, EntityManagerInterface $em)
+    {
+        $actionRepository = $em->getRepository('App:Action');
+
+        $query = $actionRepository->getStores();
+
+        $pagination = $paginator->paginate(
+            $query,
+            $request->query->getInt('page', 1),
+            20,
+            [
+                PaginatorInterface::DEFAULT_SORT_FIELD_NAME => 'a.store',
+                PaginatorInterface::DEFAULT_SORT_DIRECTION => 'asc',
+            ]
+        );
+
+        return $this->render('dashboard/stores.html.twig', [
+            'pagination' => $pagination,
+        ]);
+    }
 }
