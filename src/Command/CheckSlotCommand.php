@@ -64,8 +64,9 @@ class CheckSlotCommand extends Command
             $this->em->flush();
             
             $slot = (new Slot())
-            ->setOpen($store->isSlotOpen())
-            ->setStore($store);
+                ->setOpen($store->isSlotOpen())
+                ->setStore($store);
+                
             $this->em->persist($slot);
             $this->em->flush();
         }

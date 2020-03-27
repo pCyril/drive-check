@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\SlotRepository")
+ * @ORM\Table(name="slots")
  */
 class Slot
 {

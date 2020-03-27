@@ -22,8 +22,8 @@ final class Version20200327175928 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('CREATE TABLE slot (id INT AUTO_INCREMENT NOT NULL, store_id INT NOT NULL, created_at DATETIME NOT NULL, open TINYINT(1) NOT NULL, INDEX IDX_AC0E2067B092A811 (store_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
-        $this->addSql('ALTER TABLE slot ADD CONSTRAINT FK_AC0E2067B092A811 FOREIGN KEY (store_id) REFERENCES stores (id)');
+        $this->addSql('CREATE TABLE slots (id INT AUTO_INCREMENT NOT NULL, store_id INT NOT NULL, created_at DATETIME NOT NULL, open TINYINT(1) NOT NULL, INDEX IDX_AC0E2067B092A811 (store_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('ALTER TABLE slots ADD CONSTRAINT FK_AC0E2067B092A811 FOREIGN KEY (store_id) REFERENCES stores (id)');
     }
 
     public function down(Schema $schema) : void
@@ -31,6 +31,6 @@ final class Version20200327175928 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('DROP TABLE slot');
+        $this->addSql('DROP TABLE slots');
     }
 }

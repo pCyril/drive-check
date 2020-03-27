@@ -7,7 +7,6 @@ use App\Entity\Store;
 use App\Form\Type\ActionType;
 use App\Repository\ActionRepository;
 use App\Repository\StoreRepository;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -203,6 +202,7 @@ class DashboardController extends AbstractController
         }
         $isCloseSlot = count($slots) - $isOpenSlot;
         $slotJsDonutSeries = [$isOpenSlot, $isCloseSlot];
+
         return $this->render('dashboard/store.html.twig', [
             'slotsJsLabels' => json_encode($slotsJsLabels),
             'slotsJsSeries' => json_encode($slotsJsSeries),
