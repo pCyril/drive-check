@@ -18,8 +18,7 @@ class ActionRepository extends EntityRepository
 
     public function getStores(){
         $qb = $this->createQueryBuilder('a');
-        $qb->groupBy('a.store')
-        ->addGroupBy('a.storeId');
+
         return $qb->getQuery();
     }
 }

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Action;
 use App\Form\Type\ActionType;
+use App\Repository\ActionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -105,16 +106,19 @@ class DashboardController extends AbstractController
      */
     public function copyAction(EntityManagerInterface $em, Action $action)
     {
-        $action = $em->getRepository('App:Action')->findOneBy(['store' => $action->getStore(), 'storeId' => $action->getStoreId(), 'user' => $this->getUser()]);
-        if (!$action) {
+        $userAction = $em->getRepository('App:Action')->findOneBy(['store' => $action->getStore(), 'storeId' => $action->getStoreId(), 'user' => $this->getUser()]);
+
+        if (!$userAction) {
             $newAction = (new Action())
                 ->setStore($action->getStore())
                 ->setStoreId($action->getStoreId())
                 ->setStoreName($action->getStoreName())
                 ->setUser($this->getUser());
+
             $em->persist($newAction);
             $em->flush();
-        }else{            
+        } else {
+
             return $this->redirectToRoute('dashboard_stores');
         }
 
@@ -130,6 +134,7 @@ class DashboardController extends AbstractController
      */
     public function stores(Request $request, PaginatorInterface $paginator, EntityManagerInterface $em)
     {
+        /** @var ActionRepository $actionRepository */
         $actionRepository = $em->getRepository('App:Action');
 
         $query = $actionRepository->getStores();

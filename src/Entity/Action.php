@@ -239,7 +239,7 @@ class Action
      *
      * @return  self
      */ 
-    public function setStoreName(string $storeName)
+    public function setStoreName($storeName)
     {
         $this->storeName = $storeName;
 
