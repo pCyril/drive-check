@@ -1,0 +1,14 @@
+{% extends "mail/layout/base.html.twig" %}
+
+{% block content %}
+    <mj-section mj-class="content">
+        <mj-column>
+            <mj-text mj-class="bold">Bonjour,</mj-text>
+
+            <mj-text>
+                Mauvaise nouvelle le produit {{ productName }} n'est plus disponible dans le magasin {{ store }}({{ id }}{% if storeName %} {{ storeName }}{% endif %}).
+            </mj-text>
+
+        </mj-column>
+    </mj-section>
+{% endblock %}
