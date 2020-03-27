@@ -123,20 +123,20 @@ class DashboardController extends AbstractController
     }
 
     /**
-     * @Route("/copy/action/{action}", name="copy_action")
+     * @Route("/follow/store/{store}", name="follow_store")
      *
      * @param EntityManagerInterface $em
-     * @param Action $action
+     * @param Store $store
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function copyAction(EntityManagerInterface $em, Action $action)
+    public function followStore(EntityManagerInterface $em, Store $store)
     {
-        $userAction = $em->getRepository('App:Action')->findOneBy(['store' => $action->getStore(), 'user' => $this->getUser()]);
+        $userAction = $em->getRepository('App:Action')->findOneBy(['store' => $store, 'user' => $this->getUser()]);
 
         if (!$userAction) {
             $newAction = (new Action())
-                ->setStore($action->getStore())
+                ->setStore($store)
                 ->setUser($this->getUser());
 
             $em->persist($newAction);

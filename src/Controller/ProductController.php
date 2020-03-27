@@ -22,7 +22,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class ProductController extends AbstractController
 {
     /**
-     * @Route("missing/product", name="missing_product")
+     * @Route("/missing/product", name="missing_product")
      *
      * @param Request $request
      * @param EntityManagerInterface $em
