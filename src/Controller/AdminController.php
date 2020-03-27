@@ -57,8 +57,8 @@ class AdminController extends AbstractController
             $request->query->getInt('page', 1),
             50,
             [
-                PaginatorInterface::DEFAULT_SORT_FIELD_NAME => 'u.username',
-                PaginatorInterface::DEFAULT_SORT_DIRECTION => 'asc',
+                PaginatorInterface::DEFAULT_SORT_FIELD_NAME => 'u.lastLogin',
+                PaginatorInterface::DEFAULT_SORT_DIRECTION => 'desc',
             ]
         );
 
