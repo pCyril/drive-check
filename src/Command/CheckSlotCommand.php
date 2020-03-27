@@ -168,7 +168,7 @@ class CheckSlotCommand extends Command
     {
         $actionRepository = $this->em->getRepository('App:Action');
 
-        $actions = $actionRepository->findBy(['onBreack' => false, 'sotre' => $store]);
+        $actions = $actionRepository->findBy(['onBreak' => false, 'sotre' => $store]);
 
         /** @var Action $action */
         foreach ($actions as $action) {
