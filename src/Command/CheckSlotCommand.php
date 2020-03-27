@@ -36,7 +36,7 @@ class CheckSlotCommand extends Command
     {
         $actionRepository = $this->em->getRepository('App:Action');
 
-        $actions = $actionRepository->findBy(['onBreak' => false]);
+        $actions = $actionRepository->findAll();
 
         $progressBar = new ProgressBar($output);
 
@@ -154,6 +154,10 @@ class CheckSlotCommand extends Command
      */
     public function sendEmail(Action $action, $close = false)
     {
+        if ($action->isOnBreak()) {
+            return;
+        }
+
         $subject = 'Votre drive a un créneau disponible';
         $template = 'mail/new_slot.html.twig';
 
