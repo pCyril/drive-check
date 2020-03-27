@@ -117,6 +117,16 @@ class CheckSlotCommand extends Command
     {
         $client = new Client();
 
+        $client->request('POST', 'https://www.coursesu.com/on/demandware.store/Sites-DigitalU-Site/fr_FR/Stores-SetStoreWeb?format=ajax', [
+            'form_params' => [
+                'storeId' => $action->getStoreId(),
+                'partnerStoreId' => '',
+            ],
+            'headers' => [
+                'Cookie' => 'dwsid=B53OlSsoxHiLgV_Kj_DW18VlLBDwKc2A4KOP3JlQvJwPdpZI2gNlr8huwMZ-qVzqfrMIg8sShATXB61omx62ZA==',
+            ]
+        ]);
+
         $response = $client->request('POST', 'https://www.coursesu.com/on/demandware.store/Sites-DigitalU-Site/fr_FR/DeliverySlot-GetDeliverySlots', [
             'form_params' => [
                 'deliveryPoint' => 'drive',

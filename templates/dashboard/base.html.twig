@@ -32,7 +32,7 @@
                     <div class="hidden md:block">
                         <div class="ml-4 flex items-center md:ml-6">
                             <a href="{{ path('dashboard_home') }}" class="{% if current_path == 'dashboard_home' %}{{ activeClassLink }}{% else %}{{ inactiveClassLink }}{% endif %}">Home</a>
-                            <a href="{{ path('dashboard_stores') }}" class="{% if current_path == 'dashboard_stores' %}{{ activeClassLink }}{% else %}{{ inactiveClassLink }}{% endif %}">Magasins</a>
+                            <a href="{{ path('dashboard_stores') }}" class="ml-2 {% if current_path == 'dashboard_stores' %}{{ activeClassLink }}{% else %}{{ inactiveClassLink }}{% endif %}">Magasins</a>
                             {% if app.user.hasRole('ROLE_ADMIN') %}
                                 <div @click.away="openAdminDrop = false" class="relative" x-data="{ openAdminDrop: false }">
                                     <a href="javascript:void(0);" @click="openAdminDrop = !openAdminDrop" class="{% if 'admin_' in current_path %}{{ activeClassLink }}{% else %}{{ inactiveClassLink }}{% endif %} ml-4">Admin</a>
