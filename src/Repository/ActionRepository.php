@@ -11,6 +11,7 @@ class ActionRepository extends EntityRepository
     {
         $qb = $this->createQueryBuilder('a');
         $qb->select('a')
+            ->join('a.store', 's')
             ->andWhere('a.user = :user')->setParameter('user', $user);
 
         return $qb->getQuery();

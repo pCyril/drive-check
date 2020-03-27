@@ -3,6 +3,7 @@
 namespace App\Command;
 
 use App\Entity\Action;
+use App\Entity\Store;
 use Doctrine\ORM\EntityManagerInterface;
 use GuzzleHttp\Client;
 use Psr\Container\ContainerInterface;
@@ -34,61 +35,61 @@ class CheckSlotCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $actionRepository = $this->em->getRepository('App:Action');
+        $storeRepository = $this->em->getRepository('App:Store');
 
-        $actions = $actionRepository->findAll();
+        $stores = $storeRepository->findAll();
 
         $progressBar = new ProgressBar($output);
 
         /**
          * @var  $key
-         * @var Action $action
+         * @var Store $store
          */
-        foreach ($progressBar->iterate($actions) as $key => $action) {
-            switch ($action->getStore()) {
+        foreach ($progressBar->iterate($stores) as $key => $store) {
+            switch ($store->getStore()) {
                 case 'auchan':
-                    $action = $this->checkAuchanDrive($action);
+                    $store = $this->checkAuchanDrive($store);
                     break;
                 case 'carrefour':
-                    $action = $this->checkCarrefourDrive($action);
+                    $store = $this->checkCarrefourDrive($store);
                     break;
                 case 'super_u':
-                    $action = $this->checkSuperUDrive($action);
+                    $store = $this->checkSuperUDrive($store);
                     break;
             }
 
-            $action->setLastCheck(new \DateTime());
-            $this->em->persist($action);
+            $store->setLastCheck(new \DateTime());
+            $this->em->persist($store);
             $this->em->flush();
         }
     }
 
-    public function checkAuchanDrive(Action $action)
+    public function checkAuchanDrive(Store $store)
     {
         $client = new Client();
 
         $response = $client->request('POST', 'https://mobile.auchandrive.fr/ws/NextSlot', [
             'form_params' => [
-                'shopId' => $action->getStoreId(),
+                'shopId' => $store->getStoreId(),
             ]
         ]);
 
         $result = json_decode($response->getBody()->__toString(), true);
 
-        if ($result['status'] === 'ok' && !$action->isSlotOpen()) {
-            $action->setSlotOpen(true);
-            $this->sendEmail($action);
+        if ($result['status'] === 'ok' && !$store->isSlotOpen()) {
+            $store->setSlotOpen(true);
+            $this->sendEmail($store);
         } else {
-            if ($action->isSlotOpen()) {
-                $this->sendEmail($action, true);
+            if ($store->isSlotOpen()) {
+                $this->sendEmail($store, true);
             }
-            $action->setSlotOpen(false);
+            $store->setSlotOpen(false);
         }
 
-        return $action;
+        return $store;
     }
 
-    public function checkCarrefourDrive(Action $action)
+    public function checkCarrefourDrive(Store $store)
     {
         $client = new Client();
 
@@ -100,26 +101,26 @@ class CheckSlotCommand extends Command
 
         $result = json_decode($response->getBody()->__toString(), true);
 
-        if (!empty($result) && !$action->isSlotOpen()) {
-            $action->setSlotOpen(true);
-            $this->sendEmail($action);
+        if (!empty($result) && !$store->isSlotOpen()) {
+            $store->setSlotOpen(true);
+            $this->sendEmail($store);
         } else {
-            if ($action->isSlotOpen()) {
-                $this->sendEmail($action, true);
+            if ($store->isSlotOpen()) {
+                $this->sendEmail($store, true);
             }
-            $action->setSlotOpen(false);
+            $store->setSlotOpen(false);
         }
 
-        return $action;
+        return $store;
     }
 
-    public function checkSuperUDrive(Action $action)
+    public function checkSuperUDrive(Store $store)
     {
         $client = new Client();
 
         $client->request('POST', 'https://www.coursesu.com/on/demandware.store/Sites-DigitalU-Site/fr_FR/Stores-SetStoreWeb?format=ajax', [
             'form_params' => [
-                'storeId' => $action->getStoreId(),
+                'storeId' => $store->getStoreId(),
                 'partnerStoreId' => '',
             ],
             'headers' => [
@@ -133,7 +134,7 @@ class CheckSlotCommand extends Command
                 'deliveryPoint' => 'drive',
             ],
             'headers' => [
-                'Cookie' => 'dwsid=sgTEy-i7OMSQXQhBLFZWJhg6y5btYdgbOgi0G-MKL3MWOjuWJ2Dlg2Wqn-1WIQ_W5-x9xhxVJ9hpSNGuRkdn_A==; storeId='.$action->getStoreId().';'
+                'Cookie' => 'dwsid=sgTEy-i7OMSQXQhBLFZWJhg6y5btYdgbOgi0G-MKL3MWOjuWJ2Dlg2Wqn-1WIQ_W5-x9xhxVJ9hpSNGuRkdn_A==; storeId='.$store->getStoreId().';'
             ]
         ]);
 
@@ -147,53 +148,57 @@ class CheckSlotCommand extends Command
             }
         }
 
-        if ($availableSlot && !$action->isSlotOpen()) {
-            $action->setSlotOpen(true);
-            $this->sendEmail($action);
+        if ($availableSlot && !$store->isSlotOpen()) {
+            $store->setSlotOpen(true);
+            $this->sendEmail($store);
         } else {
-            if ($action->isSlotOpen()) {
-                $this->sendEmail($action, true);
+            if ($store->isSlotOpen()) {
+                $this->sendEmail($store, true);
             }
-            $action->setSlotOpen(false);
+            $store->setSlotOpen(false);
         }
 
-        return $action;
+        return $store;
     }
 
     /**
-     * @param Action $action
+     * @param Store $store
      */
-    public function sendEmail(Action $action, $close = false)
+    public function sendEmail(Store $store, $close = false)
     {
-        if ($action->isOnBreak()) {
-            return;
+        $actionRepository = $this->em->getRepository('App:Action');
+
+        $actions = $actionRepository->findBy(['onBreack' => false, 'sotre' => $store]);
+
+        /** @var Action $action */
+        foreach ($actions as $action) {
+            $subject = 'Votre drive a un créneau disponible';
+            $template = 'mail/new_slot.html.twig';
+
+            if ($close) {
+                $subject = 'Votre drive n\'a plus de créneaux disponibles';
+                $template = 'mail/close_slot.html.twig';
+            }
+
+            $message = (new \Swift_Message($subject))
+                ->setFrom('perraud.cyril@gmail.com')
+                ->setTo($action->getUser()->getEmail())
+                ->setBody(
+                    $this->renderHTML($this->templating->render(
+                        $template,
+                        [
+                            'store' => $action->getStore()->getStore(),
+                            'id' => $action->getStore()->getStoreId(),
+                            'storeName' => $action->getStore()->getStoreName(),
+                        ]
+                    )),
+                    'text/html'
+                )
+            ;
+
+            $this->mailer->send($message);
         }
 
-        $subject = 'Votre drive a un créneau disponible';
-        $template = 'mail/new_slot.html.twig';
-
-        if ($close) {
-            $subject = 'Votre drive n\'a plus de créneaux disponibles';
-            $template = 'mail/close_slot.html.twig';
-        }
-
-        $message = (new \Swift_Message($subject))
-            ->setFrom('perraud.cyril@gmail.com')
-            ->setTo($action->getUser()->getEmail())
-            ->setBody(
-                $this->renderHTML($this->templating->render(
-                    $template,
-                    [
-                        'store' => $action->getStore(),
-                        'id' => $action->getStoreId(),
-                        'storeName' => $action->getStoreName(),
-                    ]
-                )),
-                'text/html'
-            )
-        ;
-
-        $this->mailer->send($message);
     }
 
     public function renderHTML($mjml) {

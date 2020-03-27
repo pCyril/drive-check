@@ -26,12 +26,6 @@ class Action
     protected $createdAt;
 
     /**
-     * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    protected $lastCheck;
-
-    /**
      * @var User
      *
      * @ORM\ManyToOne(targetEntity="User")
@@ -40,9 +34,10 @@ class Action
     protected $user;
 
     /**
-     * @var String
-     * @ORM\Column(type="string", length=50, nullable=false)
+     * @var Store
      *
+     * @ORM\ManyToOne(targetEntity="Store")
+     * @ORM\JoinColumn(name="store_id", referencedColumnName="id", nullable=false)
      */
     protected $store;
 
@@ -53,18 +48,6 @@ class Action
     protected $storeId;
 
     /**
-     * @var string
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    protected $storeName;
-
-    /**
-     * @var boolean
-     * @ORM\Column(type="boolean", nullable=false, options={"default": false})
-     */
-    protected $slotOpen;
-
-    /**
      * @var boolean
      * @ORM\Column(type="boolean", nullable=false, options={"default": false})
      */
@@ -73,7 +56,6 @@ class Action
     public function __construct()
     {
         $this->createdAt = new \DateTime();
-        $this->slotOpen = false;
         $this->onBreak = false;
     }
 
@@ -126,86 +108,6 @@ class Action
     }
 
     /**
-     * @return String
-     */
-    public function getStore()
-    {
-        return $this->store;
-    }
-
-    /**
-     * @param String $store
-     *
-     * @return $this
-     */
-    public function setStore($store)
-    {
-        $this->store = $store;
-
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getStoreId()
-    {
-        return $this->storeId;
-    }
-
-    /**
-     * @param int $storeId
-     *
-     * @return $this
-     */
-    public function setStoreId($storeId)
-    {
-        $this->storeId = $storeId;
-
-        return $this;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getLastCheck()
-    {
-        return $this->lastCheck;
-    }
-
-    /**
-     * @param \DateTime $lastCheck
-     *
-     * @return $this
-     */
-    public function setLastCheck($lastCheck)
-    {
-        $this->lastCheck = $lastCheck;
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isSlotOpen()
-    {
-        return $this->slotOpen;
-    }
-
-    /**
-     * @param bool $slotOpen
-     *
-     * @return $this
-     */
-    public function setSlotOpen($slotOpen)
-    {
-        $this->slotOpen = $slotOpen;
-
-        return $this;
-    }
-
-    /**
      * @return bool
      */
     public function isOnBreak()
@@ -225,23 +127,22 @@ class Action
         return $this;
     }
 
-
     /**
-     * @return  string
-     */ 
-    public function getStoreName()
+     * @return Store
+     */
+    public function getStore()
     {
-        return $this->storeName;
+        return $this->store;
     }
 
     /**
-     * @param  string  $storeName
+     * @param $store
      *
-     * @return  self
-     */ 
-    public function setStoreName($storeName)
+     * @return $this
+     */
+    public function setStore($store)
     {
-        $this->storeName = $storeName;
+        $this->store = $store;
 
         return $this;
     }

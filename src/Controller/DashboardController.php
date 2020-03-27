@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Action;
+use App\Entity\Store;
 use App\Form\Type\ActionType;
 use App\Repository\ActionRepository;
+use App\Repository\StoreRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -28,6 +30,7 @@ class DashboardController extends AbstractController
      */
     public function index(Request $request, PaginatorInterface $paginator, EntityManagerInterface $em)
     {
+        /** @var ActionRepository $actionRepository */
         $actionRepository = $em->getRepository('App:Action');
 
         $query = $actionRepository->getActionByUserQuery($this->getUser());
@@ -37,7 +40,7 @@ class DashboardController extends AbstractController
             $request->query->getInt('page', 1),
             20,
             [
-                PaginatorInterface::DEFAULT_SORT_FIELD_NAME => 'a.store',
+                PaginatorInterface::DEFAULT_SORT_FIELD_NAME => 's.store',
                 PaginatorInterface::DEFAULT_SORT_DIRECTION => 'asc',
             ]
         );
@@ -66,7 +69,28 @@ class DashboardController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $action->setUser($this->getUser());
+
+            $company = $form->get("store_company")->getData();
+            $storeId = $form->get("storeId")->getData();
+            $storeName = $form->get("storeName")->getData();
+
+            /** @var StoreRepository $storeRepository */
+            $storeRepository = $em->getRepository('App:Store');
+
+            $store = $storeRepository->findOneBy(['store' => $company, 'storeId' => $storeId]);
+
+            if (!$store) {
+                $store = (new Store())
+                    ->setStore($company)
+                    ->setStoreId($storeId)
+                    ->setStoreName($storeName);
+
+                $em->persist($store);
+            }
+
+            $action
+                ->setStore($store)
+                ->setUser($this->getUser());
             $em->persist($action);
             $em->flush();
 
@@ -108,13 +132,11 @@ class DashboardController extends AbstractController
      */
     public function copyAction(EntityManagerInterface $em, Action $action)
     {
-        $userAction = $em->getRepository('App:Action')->findOneBy(['store' => $action->getStore(), 'storeId' => $action->getStoreId(), 'user' => $this->getUser()]);
+        $userAction = $em->getRepository('App:Action')->findOneBy(['store' => $action->getStore(), 'user' => $this->getUser()]);
 
         if (!$userAction) {
             $newAction = (new Action())
                 ->setStore($action->getStore())
-                ->setStoreId($action->getStoreId())
-                ->setStoreName($action->getStoreName())
                 ->setUser($this->getUser());
 
             $em->persist($newAction);
@@ -136,17 +158,17 @@ class DashboardController extends AbstractController
      */
     public function stores(Request $request, PaginatorInterface $paginator, EntityManagerInterface $em)
     {
-        /** @var ActionRepository $actionRepository */
-        $actionRepository = $em->getRepository('App:Action');
+        /** @var StoreRepository $actionRepository */
+        $storeRepository = $em->getRepository('App:Store');
 
-        $query = $actionRepository->getStores();
+        $query = $storeRepository->getStores();
 
         $pagination = $paginator->paginate(
             $query,
             $request->query->getInt('page', 1),
             20,
             [
-                PaginatorInterface::DEFAULT_SORT_FIELD_NAME => 'a.store',
+                PaginatorInterface::DEFAULT_SORT_FIELD_NAME => 's.store',
                 PaginatorInterface::DEFAULT_SORT_DIRECTION => 'asc',
             ]
         );

@@ -13,7 +13,8 @@ class ActionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('store', ChoiceType::class, [
+            ->add('store_company', ChoiceType::class, [
+                'mapped' => false,
                 'label' => 'Magasin',
                 'choices' => [
                     'Auchan' => 'auchan',
@@ -22,9 +23,11 @@ class ActionType extends AbstractType
                 ],
             ])
             ->add('storeId', IntegerType::class, [
+                'mapped' => false,
                 'label' => 'Id Magasin',
             ])
             ->add('storeName', TextType::class, [
+                'mapped' => false,
                 'label' => 'Nom du Magasin',
                 'required' => false
             ])

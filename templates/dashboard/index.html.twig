@@ -35,12 +35,12 @@
                         Id Magasin
                     </th>
                     <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                        {{ knp_pagination_sortable(pagination, 'Nom magasin', 'a.storeName', {}, {'direction': direction}) }}
-                        {% if pagination.isSorted('a.storeName') %} <i class="{{ sortClass }}"></i>{% endif %}
+                        {{ knp_pagination_sortable(pagination, 'Nom magasin', 's.storeName', {}, {'direction': direction}) }}
+                        {% if pagination.isSorted('s.storeName') %} <i class="{{ sortClass }}"></i>{% endif %}
                     </th>
                     <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                        {{ knp_pagination_sortable(pagination, 'Dernier check', 'a.lastCheck', {}, {'direction': direction}) }}
-                        {% if pagination.isSorted('a.lastCheck') %} <i class="{{ sortClass }}"></i>{% endif %}
+                        {{ knp_pagination_sortable(pagination, 'Dernier check', 's.lastCheck', {}, {'direction': direction}) }}
+                        {% if pagination.isSorted('s.lastCheck') %} <i class="{{ sortClass }}"></i>{% endif %}
                     </th>
                     <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                         {{ knp_pagination_sortable(pagination, 'Créé le', 'a.createdAt', {}, {'direction': direction}) }}
@@ -56,19 +56,19 @@
                 </thead>
                 <tbody>
                 {% for action in pagination %}
-                    <tr class="{% if action.slotOpen %}bg-green-400{% else %}bg-red-500{% endif %}">
+                    <tr class="{% if action.store.slotOpen %}bg-green-400{% else %}bg-red-500{% endif %}">
                         <td class="px-6 py-3 whitespace-no-wrap text-sm leading-5 font-medium text-gray-900">
-                            {{ action.store }}
+                            {{ action.store.store }}
                         </td>
                         <td class="px-6 py-3 whitespace-no-wrap text-sm leading-5 text-gray-900">
-                            {{ action.storeId }}
+                            {{ action.store.storeId }}
                         </td>
                         <td class="px-6 py-3 whitespace-no-wrap text-sm leading-5 text-gray-900">
-                            {{ action.storeName }}
+                            {{ action.store.storeName }}
                         </td>
                         <td class="px-6 py-3 whitespace-no-wrap text-sm leading-5 text-gray-900">
-                            {% if action.lastCheck %}
-                            {{ action.lastCheck|date("d/m/Y H:i:s") }}
+                            {% if action.store.lastCheck %}
+                            {{ action.store.lastCheck|date("d/m/Y H:i:s") }}
                             {% else %}
                                 Pas encore
                             {% endif %}
