@@ -93,19 +93,19 @@
                         <td class="px-6 py-3 whitespace-no-wrap text-right text-sm leading-5 font-medium">
                             <div @click.away="open_action_{{ action.id }} = false" class="ml-3 relative" x-data="{open_action_{{ action.id }}: false}">
                                 <div>
-                                    <a @click="open_action_{{ action.id }} = !open_action_{{ action.id }}" class="cursor-pointer inline-flex items-center px-6 py-3 border border-gray-300 text-sm leading-5 font-medium rounded-md text-gray-700 bg-white hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:text-gray-800 active:bg-gray-50 transition ease-in-out duration-150">
+                                    <a @click="open_action_{{ action.id }} = !open_action_{{ action.id }}" class="cursor-pointer inline-flex items-center px-2 py-1 border border-gray-300 text-sm leading-5 font-medium rounded-md text-gray-700 bg-white hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:text-gray-800 active:bg-gray-50 transition ease-in-out duration-150">
                                         Actions
                                     </a>
                                 </div>
-                                <div x-show="open_action_{{ action.id }}" class="origin-top-left text-left absolute right-0 mt-2 w-48 rounded-md shadow-lg z-40">
-                                    <div class="py-1 rounded-md bg-white shadow-xs">
+                                <div x-show="open_action_{{ action.id }}" class="origin-top-left text-left absolute right-0 w-48 rounded-md shadow-lg z-40">
+                                    <div class="py-1 bg-white shadow-xs">
                                         <a href="javascript:void(0);" data-modal data-modal-title="Editer ce magasin"
                                            data-url="{{ path('dashboard_add_action', { 'action': action.id}) }}"
-                                           class="block px-6 py-3 text-sm bg-white text-gray-700 hover:bg-gray-100">Editer</a>
+                                           class="block px-2 py-1 text-sm bg-white text-gray-700 hover:bg-gray-100">Editer</a>
                                     </div>
-                                    <div class="py-1 rounded-md bg-white shadow-xs">
+                                    <div class="py-1 bg-white shadow-xs">
                                         <a href="{{ path('dashboard_delete_action', { 'action': action.id}) }}" data-confirm="Etes-vous sur de vouloir supprimer ce magasin ?"
-                                           class="block px-6 py-3 text-sm bg-white text-red-600 hover:text-red-700 hover:bg-gray-100">Supprimer</a>
+                                           class="block px-2 py-1 text-sm bg-white text-red-600 hover:text-red-700 hover:bg-gray-100">Supprimer</a>
                                     </div>
                                 </div>
                             </div>

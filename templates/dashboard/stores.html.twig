@@ -40,7 +40,8 @@
                         {% if pagination.isSorted('a.lastCheck') %} <i class="{{ sortClass }}"></i>{% endif %}
                     </th>
                     <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                        Place disponible
+                        {{ knp_pagination_sortable(pagination, 'Places disponibles', 'a.slotOpen', {}, {'direction': direction}) }}
+                        {% if pagination.isSorted('a.slotOpen') %} <i class="{{ sortClass }}"></i>{% endif %}
                     </th>
                     <th class="text-right px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                         Actions
@@ -77,14 +78,14 @@
                             {% if store.user.id != app.user.id %}
                             <div @click.away="open_action_{{ store.id }} = false" class="ml-3 relative" x-data="{open_action_{{ store.id }}: false}">
                                 <div>
-                                    <a @click="open_action_{{ store.id }} = !open_action_{{ store.id }}" class="cursor-pointer inline-flex items-center px-6 py-3 border border-gray-300 text-sm leading-5 font-medium rounded-md text-gray-700 bg-white hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:text-gray-800 active:bg-gray-50 transition ease-in-out duration-150">
+                                    <a @click="open_action_{{ store.id }} = !open_action_{{ store.id }}" class="cursor-pointer inline-flex items-center px-2 py-1 border border-gray-300 text-sm leading-5 font-medium rounded-md text-gray-700 bg-white hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:text-gray-800 active:bg-gray-50 transition ease-in-out duration-150">
                                         Actions
                                     </a>
                                 </div>
-                                <div x-show="open_action_{{ store.id }}" class="origin-top-left text-left absolute right-0 mt-2 w-48 rounded-md shadow-lg z-40">
+                                <div x-show="open_action_{{ store.id }}" class="origin-top-left text-left absolute right-0 w-48 rounded-md shadow-lg z-40">
                                     <div class="py-1 rounded-md bg-white shadow-xs">
                                         <a href="{{ path('dashboard_copy_action', { 'action': store.id}) }}"
-                                           class="block px-6 py-3 text-sm bg-white hover:bg-gray-100">Surveiller ce magasin</a>
+                                           class="block px-2 py-1 text-sm bg-white hover:bg-gray-100">Surveiller ce magasin</a>
                                     </div>
                                 </div>
                             </div>
