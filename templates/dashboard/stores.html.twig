@@ -1,0 +1,87 @@
+{% set mainTitle = 'Administration' %}
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}Admin{% endblock %}
+
+{% block body %}
+
+    {% set current_path = app.request.get('_route') %}
+
+    <div class="lg:flex lg:items-center lg:justify-between mb-8">
+        <div class="flex-1 min-w-0">
+            <h4 class="text-xl font-bold leading-7 text-gray-900 sm:text-xl sm:leading-9 sm:truncate">
+                Magasins
+            </h4>
+        </div>
+    </div>
+
+    {% set direction = ('asc' == pagination.direction ? 'desc' : 'asc') %}
+
+    {% set sortClass = ('asc' == pagination.direction ? 'fal fa-sort-amount-up-alt' : 'fal fa-sort-amount-down-alt') %}
+
+    <div class="-my-2 py-2 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+        <div class="align-middle inline-block min-w-full shadow sm:rounded-lg border-b border-gray-200">
+            <table class="min-w-full">
+                <thead>
+                <tr>
+                    <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                        {{ knp_pagination_sortable(pagination, 'Magasin', 'a.store', {}, {'direction': direction}) }}
+                        {% if pagination.isSorted('a.store') %} <i class="{{ sortClass }}"></i>{% endif %}
+                    </th>
+                    <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                        Id Magasin
+                    </th>
+                    <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                        {{ knp_pagination_sortable(pagination, 'Nom magasin', 'a.storeName', {}, {'direction': direction}) }}
+                        {% if pagination.isSorted('a.storeName') %} <i class="{{ sortClass }}"></i>{% endif %}
+                    </th>
+                    <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                        {{ knp_pagination_sortable(pagination, 'Dernier check', 'a.lastCheck', {}, {'direction': direction}) }}
+                        {% if pagination.isSorted('a.lastCheck') %} <i class="{{ sortClass }}"></i>{% endif %}
+                    </th>
+                    <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                        Place disponible
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for store in pagination %}
+                    <tr class="{% if store.slotOpen %}bg-green-400{% else %}bg-red-500{% endif %}">
+                        <td class="px-6 py-3 whitespace-no-wrap text-sm leading-5 font-medium text-gray-900">
+                            {{ store.store }}
+                        </td>
+                        <td class="px-6 py-3 whitespace-no-wrap text-sm leading-5 text-gray-900">
+                            {{ store.storeId }}
+                        </td>
+                        <td class="px-6 py-3 whitespace-no-wrap text-sm leading-5 text-gray-900">
+                            {{ store.storeName }}
+                        </td>
+                        <td class="px-6 py-3 whitespace-no-wrap text-sm leading-5 text-gray-900">
+                            {% if store.lastCheck %}
+                            {{ store.lastCheck|date("d/m/Y H:i:s") }}
+                            {% else %}
+                                Pas encore
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-3 whitespace-no-wrap text-sm leading-5 text-gray-900">
+                            {% if store.slotOpen %}
+                                oui
+                            {% else %}
+                                non
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {# display navigation #}
+    <div class="navigation mt-6">
+        {{ knp_pagination_render(pagination) }}
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/confirm.js') }}" defer></script>
+{% endblock %}
