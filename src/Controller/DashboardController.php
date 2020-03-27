@@ -193,20 +193,20 @@ class DashboardController extends AbstractController
         $slots = $em->getRepository('App:Slot')->findBy(['store' => $store]);
         $slotsJsSeries = [];
         $slotsJsLabels = [];
-        $slotJsDonutSeries = [1 => 0];
+        $isOpenSlot = 0;
         foreach($slots as $slot){
-            $slotsJsLabels[] = "'".$slot->getCreatedAt()->format('H:i:s')."'";
+            $slotsJsLabels[] = $slot->getCreatedAt()->format('H:i:s');
             $slotsJsSeries[] = $slot->isOpen();
             if ($slot->isOpen()) {
-                $slotJsDonutSeries[$slot->isOpen()] = $slotJsDonutSeries[$slot->isOpen()] + 1;            
+                $isOpenSlot++;        
             }
         }
-        $slotJsDonutSeries[2] = count($slots) - $slotJsDonutSeries[1];
-        $slotJsDonutLabels = ["'Disponble'", "'Indisponible'"];
+        $isCloseSlot = count($slots) - $isOpenSlot;
+        $slotJsDonutSeries = [$isOpenSlot, $isCloseSlot];
         return $this->render('dashboard/store.html.twig', [
-            'slotsJsLabels' => implode(', ', $slotsJsLabels),
-            'slotsJsSeries' => implode(', ', $slotsJsSeries),
-            'slotJsDonutSeries' => implode(', ', $slotJsDonutSeries)
+            'slotsJsLabels' => json_encode($slotsJsLabels),
+            'slotsJsSeries' => json_encode($slotsJsSeries),
+            'slotJsDonutSeries' => json_encode($slotJsDonutSeries)
         ]);
     }
 }

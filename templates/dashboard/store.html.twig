@@ -31,32 +31,32 @@
 	<script src="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
 	<script>
 		var data = {
-labels: [{{ slotsJsLabels | raw }}],
-series: [[{{ slotsJsSeries }}]]
-};
+            labels: {{ slotsJsLabels | raw }},
+            series: [{{ slotsJsSeries }}]
+        };
 
-var options = {
-high: 1,
-axisX: {
-labelInterpolationFnc: function (value, index) {
-return index % 2 === 0 ? value : null;
-}
-}
-};
+        var options = {
+            high: 1,
+            axisX: {
+                labelInterpolationFnc: function (value, index) {
+                return index % 2 === 0 ? value : null;
+                }
+            }
+        };
 
 
-new Chartist.Bar('.ct-chart', data, options);
-var data = {
-  series: [{{ slotJsDonutSeries }}]
-};
+        new Chartist.Bar('.ct-chart', data, options);
+            var data = {
+            series: {{ slotJsDonutSeries }}
+        };
 
-var sum = function(a, b) { return a + b };
+        var sum = function(a, b) { return a + b };
 
-new Chartist.Pie('.donut-chart', data, {
-  labelInterpolationFnc: function(value) {
-    return Math.round(value / data.series.reduce(sum) * 100) + '%';
-  }
-});
+        new Chartist.Pie('.donut-chart', data, {
+            labelInterpolationFnc: function(value) {
+                return Math.round(value / data.series.reduce(sum) * 100) + '%';
+            }
+        });
 	</script>
 {% endblock %}
 
