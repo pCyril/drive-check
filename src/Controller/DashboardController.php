@@ -7,6 +7,7 @@ use App\Entity\Store;
 use App\Form\Type\ActionType;
 use App\Repository\ActionRepository;
 use App\Repository\StoreRepository;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -175,6 +176,37 @@ class DashboardController extends AbstractController
 
         return $this->render('dashboard/stores.html.twig', [
             'pagination' => $pagination,
+        ]);
+    }
+    
+
+    /**
+     * @Route("/store/{store}", name="store")
+     *
+     * @param EntityManagerInterface $em
+     * @param Store $store
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function store(EntityManagerInterface $em, Store $store)
+    {
+        $slots = $em->getRepository('App:Slot')->findBy(['store' => $store]);
+        $slotsJsSeries = [];
+        $slotsJsLabels = [];
+        $slotJsDonutSeries = [1 => 0];
+        foreach($slots as $slot){
+            $slotsJsLabels[] = "'".$slot->getCreatedAt()->format('H:i:s')."'";
+            $slotsJsSeries[] = $slot->isOpen();
+            if ($slot->isOpen()) {
+                $slotJsDonutSeries[$slot->isOpen()] = $slotJsDonutSeries[$slot->isOpen()] + 1;            
+            }
+        }
+        $slotJsDonutSeries[2] = count($slots) - $slotJsDonutSeries[1];
+        $slotJsDonutLabels = ["'Disponble'", "'Indisponible'"];
+        return $this->render('dashboard/store.html.twig', [
+            'slotsJsLabels' => implode(', ', $slotsJsLabels),
+            'slotsJsSeries' => implode(', ', $slotsJsSeries),
+            'slotJsDonutSeries' => implode(', ', $slotJsDonutSeries)
         ]);
     }
 }

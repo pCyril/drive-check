@@ -3,6 +3,7 @@
 namespace App\Command;
 
 use App\Entity\Action;
+use App\Entity\Slot;
 use App\Entity\Store;
 use Doctrine\ORM\EntityManagerInterface;
 use GuzzleHttp\Client;
@@ -60,6 +61,12 @@ class CheckSlotCommand extends Command
 
             $store->setLastCheck(new \DateTime());
             $this->em->persist($store);
+            $this->em->flush();
+            
+            $slot = (new Slot())
+            ->setOpen($store->isSlotOpen())
+            ->setStore($store);
+            $this->em->persist($slot);
             $this->em->flush();
         }
     }

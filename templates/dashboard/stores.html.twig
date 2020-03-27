@@ -44,7 +44,7 @@
                 {% for store in pagination %}
                     <tr class="{% if store.slotOpen %}bg-green-400{% else %}bg-red-500{% endif %}">
                         <td class="px-6 py-3 whitespace-no-wrap text-sm leading-5 font-medium text-gray-900">
-                            {{ store.store }}
+                            <a href="{{ path('dashboard_store', {store: store.id}) }}" style="text-decoration:underline">{{ store.store }}</a>
                         </td>
                         <td class="px-6 py-3 whitespace-no-wrap text-sm leading-5 text-gray-900">
                             {{ store.storeId }}
