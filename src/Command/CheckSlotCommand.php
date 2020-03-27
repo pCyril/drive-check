@@ -93,7 +93,7 @@ class CheckSlotCommand extends Command
     {
         $client = new Client();
 
-        $response = $client->request('GET', 'https://www.carrefour.fr/api/firstslot?storeId=' . $action->getStoreId(), [
+        $response = $client->request('GET', 'https://www.carrefour.fr/api/firstslot?storeId=' . $store->getStoreId(), [
             'headers' => [
                 'x-requested-with' => 'XMLHttpRequest'
             ]
