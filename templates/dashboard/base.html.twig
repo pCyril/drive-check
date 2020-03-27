@@ -120,10 +120,13 @@
             </div>
         </nav>
         <header class="bg-white shadow">
-            <div class="py-6 px-4 sm:px-6 lg:px-8">
-                <h2 class="text-3xl font-bold leading-tight text-gray-900">
+            <div class="py-6 px-4 sm:px-6 lg:px-8 flex">
+                <h2 class="text-3xl font-bold leading-tight text-gray-900 flex-auto">
                     {{ mainTitle }}
                 </h2>
+                <div>
+                    {% block actions %}{% endblock %}
+                </div>
             </div>
         </header>
         <main>

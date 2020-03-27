@@ -1,4 +1,4 @@
-{% set mainTitle = 'Administration' %}
+{% set mainTitle = 'Magasins' %}
 {% extends 'dashboard/base.html.twig' %}
 
 {% block title %}Admin{% endblock %}
@@ -6,14 +6,6 @@
 {% block body %}
 
     {% set current_path = app.request.get('_route') %}
-
-    <div class="lg:flex lg:items-center lg:justify-between mb-8">
-        <div class="flex-1 min-w-0">
-            <h4 class="text-xl font-bold leading-7 text-gray-900 sm:text-xl sm:leading-9 sm:truncate">
-                Magasins
-            </h4>
-        </div>
-    </div>
 
     {% set direction = ('asc' == pagination.direction ? 'desc' : 'asc') %}
 
