@@ -37,4 +37,3 @@ security:
         - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/admin/, role: IS_AUTHENTICATED_FULLY }
         - { path: ^/dashboard/, role: IS_AUTHENTICATED_FULLY }
-        - { path: ^/writer/, role: IS_AUTHENTICATED_FULLY }

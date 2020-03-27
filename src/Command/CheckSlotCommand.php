@@ -123,16 +123,17 @@ class CheckSlotCommand extends Command
                 'partnerStoreId' => '',
             ],
             'headers' => [
-                'Cookie' => 'dwsid=B53OlSsoxHiLgV_Kj_DW18VlLBDwKc2A4KOP3JlQvJwPdpZI2gNlr8huwMZ-qVzqfrMIg8sShATXB61omx62ZA==',
+                'Cookie' => 'dwsid=sgTEy-i7OMSQXQhBLFZWJhg6y5btYdgbOgi0G-MKL3MWOjuWJ2Dlg2Wqn-1WIQ_W5-x9xhxVJ9hpSNGuRkdn_A==',
             ]
         ]);
+
 
         $response = $client->request('POST', 'https://www.coursesu.com/on/demandware.store/Sites-DigitalU-Site/fr_FR/DeliverySlot-GetDeliverySlots', [
             'form_params' => [
                 'deliveryPoint' => 'drive',
             ],
             'headers' => [
-                'Cookie' => 'dwsid=B53OlSsoxHiLgV_Kj_DW18VlLBDwKc2A4KOP3JlQvJwPdpZI2gNlr8huwMZ-qVzqfrMIg8sShATXB61omx62ZA==; storeId='.$action->getStoreId().';'
+                'Cookie' => 'dwsid=sgTEy-i7OMSQXQhBLFZWJhg6y5btYdgbOgi0G-MKL3MWOjuWJ2Dlg2Wqn-1WIQ_W5-x9xhxVJ9hpSNGuRkdn_A==; storeId='.$action->getStoreId().';'
             ]
         ]);
 
