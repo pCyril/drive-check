@@ -66,8 +66,20 @@ class CheckSlotCommand extends Command
             $slot = (new Slot())
                 ->setOpen($store->isSlotOpen())
                 ->setStore($store);
-                
+
+
             $this->em->persist($slot);
+            $this->em->flush();
+
+            $slots = $this->em->getRepository('App:Slot')->findBy(['store' => $store]);
+            $slotsOpen = $this->em->getRepository('App:Slot')->findBy(['store' => $store, 'open' => true]);
+            $disponility = 0;
+            if (count($slots)) {
+                $disponility = round(count($slotsOpen) * 100 / count($slots), 2);
+            }
+            $store->setDisponibility($disponility);
+
+            $this->em->persist($store);
             $this->em->flush();
         }
     }
