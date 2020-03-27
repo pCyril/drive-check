@@ -54,6 +54,14 @@ class Store
      */
     protected $slotOpen;
 
+    /**
+     * @var float
+     * @ORM\Column(type="decimal", nullable=true, precision=10, scale=2)
+     */
+    protected $disponibility;
+
+
+
     public function __construct()
     {
         $this->createdAt = new \DateTime();
@@ -184,6 +192,26 @@ class Store
     public function setStoreName($storeName)
     {
         $this->storeName = $storeName;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDisponibility()
+    {
+        return $this->disponibility;
+    }
+
+    /**
+     * @param int $storeId
+     *
+     * @return $this
+     */
+    public function setDisponibility($disponibility)
+    {
+        $this->disponibility = $disponibility;
 
         return $this;
     }
