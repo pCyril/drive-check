@@ -54,7 +54,7 @@ class Action
 
     /**
      * @var string
-     * @ORM\Column(type="string", nullable=true, length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     protected $storeName;
 
@@ -214,7 +214,7 @@ class Action
     }
 
     /**
-     * @param bool $onbreak
+     * @param bool $onBreak
      *
      * @return $this
      */
@@ -227,8 +227,6 @@ class Action
 
 
     /**
-     * Get the value of storeName
-     *
      * @return  string
      */ 
     public function getStoreName()
@@ -237,8 +235,6 @@ class Action
     }
 
     /**
-     * Set the value of storeName
-     *
      * @param  string  $storeName
      *
      * @return  self
