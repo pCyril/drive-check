@@ -96,6 +96,32 @@ class DashboardController extends AbstractController
     }
 
     /**
+     * @Route("/copy/action/{action}", name="copy_action")
+     *
+     * @param EntityManagerInterface $em
+     * @param Action $action
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function copyAction(EntityManagerInterface $em, Action $action)
+    {
+        $action = $em->getRepository('App:Action')->findOneBy(['store' => $action->getStore(), 'storeId' => $action->getStoreId(), 'user' => $this->getUser()]);
+        if (!$action) {
+            $newAction = (new Action())
+                ->setStore($action->getStore())
+                ->setStoreId($action->getStoreId())
+                ->setStoreName($action->getStoreName())
+                ->setUser($this->getUser());
+            $em->persist($newAction);
+            $em->flush();
+        }else{            
+            return $this->redirectToRoute('dashboard_stores');
+        }
+
+        return $this->redirectToRoute('dashboard_home');
+    }
+
+    /**
      * @Route("/stores", name="stores")
      * @param Request $request
      * @param PaginatorInterface $paginator
