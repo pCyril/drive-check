@@ -177,4 +177,36 @@ class DashboardController extends AbstractController
             'pagination' => $pagination,
         ]);
     }
+    
+
+    /**
+     * @Route("/store/{store}", name="store")
+     *
+     * @param EntityManagerInterface $em
+     * @param Store $store
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function store(EntityManagerInterface $em, Store $store)
+    {
+        $slots = $em->getRepository('App:Slot')->findBy(['store' => $store]);
+        $slotsJsSeries = [];
+        $slotsJsLabels = [];
+        $isOpenSlot = 0;
+        foreach($slots as $slot){
+            $slotsJsLabels[] = $slot->getCreatedAt()->format('H:i:s');
+            $slotsJsSeries[] = $slot->isOpen();
+            if ($slot->isOpen()) {
+                $isOpenSlot++;        
+            }
+        }
+        $isCloseSlot = count($slots) - $isOpenSlot;
+        $slotJsDonutSeries = [$isOpenSlot, $isCloseSlot];
+
+        return $this->render('dashboard/store.html.twig', [
+            'slotsJsLabels' => json_encode($slotsJsLabels),
+            'slotsJsSeries' => json_encode($slotsJsSeries),
+            'slotJsDonutSeries' => json_encode($slotJsDonutSeries)
+        ]);
+    }
 }

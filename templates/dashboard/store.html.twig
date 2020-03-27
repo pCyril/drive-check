@@ -1,0 +1,62 @@
+{% set mainTitle = 'Magasins' %}
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}Admin
+{% endblock %}
+{% block stylesheets %}<link rel="stylesheet" href="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
+{% endblock %}
+{% block body %}
+
+	{% set current_path = app.request.get('_route') %}
+
+	<div class="-my-2 py-2 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+
+		<div class="flex mb-4">
+			<div class="w-full">
+                <h2>Disponiblités</h2>
+				<div class="ct-chart"></div>
+			</div>
+		</div>
+		<div class="flex mb-4">
+			<div class="w-1/2">
+                <h2>Taux de disponiblité</h2>
+				<div class="donut-chart"></div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+{% block javascripts %}
+	{{ parent() }}
+	<script src="{{ asset('js/confirm.js') }}" defer></script>
+	<script src="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
+	<script>
+		var data = {
+            labels: {{ slotsJsLabels | raw }},
+            series: [{{ slotsJsSeries }}]
+        };
+
+        var options = {
+            high: 1,
+            axisX: {
+                labelInterpolationFnc: function (value, index) {
+                return index % 2 === 0 ? value : null;
+                }
+            }
+        };
+
+
+        new Chartist.Bar('.ct-chart', data, options);
+            var data = {
+            series: {{ slotJsDonutSeries }}
+        };
+
+        var sum = function(a, b) { return a + b };
+
+        new Chartist.Pie('.donut-chart', data, {
+            labelInterpolationFnc: function(value) {
+                return Math.round(value / data.series.reduce(sum) * 100) + '%';
+            }
+        });
+	</script>
+{% endblock %}
+
