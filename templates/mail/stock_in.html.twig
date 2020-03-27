@@ -1,0 +1,15 @@
+{% extends "mail/layout/base.html.twig" %}
+
+{% block content %}
+    <mj-section mj-class="content">
+        <mj-column>
+            <mj-text mj-class="bold">Bonjour,</mj-text>
+
+            <mj-text>
+                Bonne nouvelle le produit {{ productName }} est de nouveau disponible dans le magasin {{ store }}({{ id }}{% if storeName %} {{ storeName }}{% endif %}
+                ).
+            </mj-text>
+
+        </mj-column>
+    </mj-section>
+{% endblock %}

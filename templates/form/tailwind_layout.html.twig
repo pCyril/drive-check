@@ -27,7 +27,8 @@
     <div class="w-full">
         <input type="{{ type }}"
                id="{{ id}}"
-               name={{ full_name }}
+               name="{{ full_name }}"
+               {%- if attr.placeholder is defined -%} placeholder="{{ attr.placeholder }}" {%- endif -%}
                class="{%- if attr.class is defined -%}{{ attr.class }}{%- else -%}{{ block('input_class') }}{%- endif -%}"
                {% if value is not empty %}value="{{ value }}" {% endif %}
                 {% if required is defined and required is same as (true) %}required {% endif %}
