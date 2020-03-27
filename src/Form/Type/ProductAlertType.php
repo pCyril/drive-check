@@ -23,7 +23,7 @@ class ProductAlertType extends AbstractType
                         ->orderBy('s.storeName', 'ASC');
                 },
                 'choice_label' => function (?Store $store) {
-                    return $store->getStoreName()?:$store->getStore() . ' (' . $store->getStoreId() . ')';
+                    return $store->getStoreName()?  $store->getStore() . ' ' . $store->getStoreName()  :$store->getStore() . ' (' . $store->getStoreId() . ')';
                 }
             ])
             ->add('product_url', TextType::class, [
