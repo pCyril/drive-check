@@ -73,6 +73,7 @@ class ProductAlert
     {
         $this->createdAt = new \DateTime();
         $this->stockOut = true;
+        $this->onBreak = false;
     }
 
     /**
