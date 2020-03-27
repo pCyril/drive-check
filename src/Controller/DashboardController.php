@@ -105,9 +105,9 @@ class DashboardController extends AbstractController
      */
     public function copyAction(EntityManagerInterface $em, Action $action)
     {
-        // if ($this->getUser()->getId() !== $action->getUser()->getId()) {
-        //     return $this->redirectToRoute('dashboard_store');
-        // }
+        if ($this->getUser()->getId() !== $action->getUser()->getId()) {
+            return $this->redirectToRoute('dashboard_store');
+        }
 
         $newAction = new Action();
         $newAction->setStore($action->getStore());
