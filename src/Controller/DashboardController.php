@@ -197,7 +197,7 @@ class DashboardController extends AbstractController
         foreach($slots as $slot){
             if($slot->getCreatedAt()->format('H') != $hour){
                 $hour = $slot->getCreatedAt()->format('H');
-                $slotsJsLabels[] = $slot->getCreatedAt()->format('H:i:s');
+                $slotsJsLabels[] = $slot->getCreatedAt()->format('H:i');
             }else{
                 $slotsJsLabels[] = '';
             }
