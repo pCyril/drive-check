@@ -198,6 +198,8 @@ class DashboardController extends AbstractController
             if($slot->getCreatedAt()->format('H') != $hour){
                 $hour = $slot->getCreatedAt()->format('H');
                 $slotsJsLabels[] = $slot->getCreatedAt()->format('H:i:s');
+            }else{
+                $slotsJsLabels[] = '';
             }
             $slotsJsSeries[] = $slot->isOpen();
             if ($slot->isOpen()) {
