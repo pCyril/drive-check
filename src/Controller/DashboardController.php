@@ -66,6 +66,10 @@ class DashboardController extends AbstractController
             'action' => $this->generateUrl('dashboard_add_action', ['action' => $action ? $action->getId() : null])
         ]);
 
+        $form->get('store_company')->setData($action->getStore()->getStore());
+        $form->get('storeId')->setData($action->getStore()->getStoreId());
+        $form->get('storeName')->setData($action->getStore()->getStoreName());
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -77,6 +81,7 @@ class DashboardController extends AbstractController
             /** @var StoreRepository $storeRepository */
             $storeRepository = $em->getRepository('App:Store');
 
+            /** @var Store $store */
             $store = $storeRepository->findOneBy(['store' => $company, 'storeId' => $storeId]);
 
             if (!$store) {
@@ -84,9 +89,13 @@ class DashboardController extends AbstractController
                     ->setStore($company)
                     ->setStoreId($storeId)
                     ->setStoreName($storeName);
-
-                $em->persist($store);
+            } else {
+                if (!$store->getStoreName()) {
+                    $store->setStoreName($storeName);
+                }
             }
+
+            $em->persist($store);
 
             $action
                 ->setStore($store)
