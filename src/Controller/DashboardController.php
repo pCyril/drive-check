@@ -198,12 +198,18 @@ class DashboardController extends AbstractController
      */
     public function store(EntityManagerInterface $em, Store $store)
     {
-        $slots = $em->getRepository('App:Slot')->findBy(['store' => $store]);
+        $slots = $em->getRepository('App:Slot')->getSlotsLastTwentyFourHours();
         $slotsJsSeries = [];
         $slotsJsLabels = [];
         $isOpenSlot = 0;
+        $hour = '';
         foreach($slots as $slot){
-            $slotsJsLabels[] = $slot->getCreatedAt()->format('H:i:s');
+            if($slot->getCreatedAt()->format('H') != $hour){
+                $hour = $slot->getCreatedAt()->format('H');
+                $slotsJsLabels[] = $slot->getCreatedAt()->format('H:i');
+            }else{
+                $slotsJsLabels[] = '';
+            }
             $slotsJsSeries[] = $slot->isOpen();
             if ($slot->isOpen()) {
                 $isOpenSlot++;        

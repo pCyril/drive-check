@@ -17,5 +17,15 @@ class SlotRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Slot::class);
+        
+    }
+
+    public function getSlotsLastTwentyFourHours(){
+        $lastTwentyFourHours = (new \DateTime())->modify('-1 day');
+        $qb = $this->createQueryBuilder('s');
+        $qb->where('s.createdAt > :lastTwentyFourFours');
+        $qb->setParameter('lastTwentyFourFours', $lastTwentyFourHours);
+
+        return $qb->getQuery()->getResult();
     }
 }
