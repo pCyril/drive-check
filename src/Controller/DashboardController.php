@@ -198,7 +198,7 @@ class DashboardController extends AbstractController
      */
     public function store(EntityManagerInterface $em, Store $store)
     {
-        $slots = $em->getRepository('App:Slot')->getSlotsLastTwentyFourHours();
+        $slots = $em->getRepository('App:Slot')->getSlotsLastTwentyFourHours($store);
         $slotsJsSeries = [];
         $slotsJsLabels = [];
         $isOpenSlot = 0;
