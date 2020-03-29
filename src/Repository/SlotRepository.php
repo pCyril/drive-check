@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Slot;
+use App\Entity\Store;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
@@ -20,11 +21,12 @@ class SlotRepository extends ServiceEntityRepository
         
     }
 
-    public function getSlotsLastTwentyFourHours(){
+    public function getSlotsLastTwentyFourHours(Store $store){
         $lastTwentyFourHours = (new \DateTime())->modify('-1 day');
-        $qb = $this->createQueryBuilder('s');
-        $qb->where('s.createdAt > :lastTwentyFourFours');
-        $qb->setParameter('lastTwentyFourFours', $lastTwentyFourHours);
+        $qb = $this->createQueryBuilder('s')
+            ->where('s.createdAt > :lastTwentyFourHours')
+            ->andWhere('s.store = :store')
+            ->setParameters(['lastTwentyFourHours' => $lastTwentyFourHours, 'store' => $store]);
 
         return $qb->getQuery()->getResult();
     }
